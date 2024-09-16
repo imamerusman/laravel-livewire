@@ -1,0 +1,99 @@
+{
+    "name": "laravel/laravel",
+    "type": "project",
+    "description": "The skeleton application for the Laravel framework.",
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^8.1",
+        "api-video/php-api-client": "^1.3",
+        "bezhansalleh/filament-shield": "^3.0",
+        "calebporzio/sushi": "^2.4",
+        "dedoc/scramble": "^0.8.2",
+        "filament/filament": "^3.0.9",
+        "filament/spatie-laravel-media-library-plugin": "^3.0",
+        "filament/spatie-laravel-tags-plugin": "^3.0",
+        "google/apiclient": "^2.15",
+        "guzzlehttp/guzzle": "^7.7",
+        "jeffgreco13/filament-breezy": "^2.1",
+        "justinrainbow/json-schema": "^5.2",
+        "kreait/laravel-firebase": "^5.3",
+        "laravel/cashier": "^14.12",
+        "laravel/framework": "^10.10",
+        "laravel/octane": "^2.0",
+        "laravel/sanctum": "^3.2",
+        "laravel/telescope": "^4.15",
+        "laravel/tinker": "^2.8",
+        "mckenziearts/laravel-notify": "^2.4",
+        "nyholm/psr7": "^1.8",
+        "predis/predis": "^2.2",
+        "shopify/shopify-api": "^4.3",
+        "simplesoftwareio/simple-qrcode": "^4.2",
+        "spatie/laravel-medialibrary": "*",
+        "spatie/laravel-permission": "^5.10",
+        "spatie/laravel-stripe-webhooks": "^3.5",
+        "stechstudio/filament-impersonate": "^3.5.",
+        "symfony/http-client": "^6.3",
+        "wireui/wireui": "^1.18"
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.9.1",
+        "laravel/pint": "^1.0",
+        "laravel/sail": "^1.18",
+        "mockery/mockery": "^1.4.4",
+        "nunomaduro/collision": "^7.0",
+        "phpunit/phpunit": "^10.1",
+        "ryoluo/sail-ssl": "^1.2",
+        "spatie/laravel-ignition": "^2.0"
+    },
+    "autoload": {
+        "files": [
+            "app/Helpers/Functions.php"
+        ],
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

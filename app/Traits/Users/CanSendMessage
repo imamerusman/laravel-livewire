@@ -1,0 +1,71 @@
+<?php
+
+namespace App\Traits\Users;
+
+use App\Models\Conversation;
+use App\Models\Message;
+use App\Notifications\DirectMessageNotification;
+use App\Relations\HasConversations;
+use Exception;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
+use Log;
+
+trait CanSendMessage
+{
+    use HasConversations;
+
+    public function sendMessage(string $body, Model $recipient): array
+    {
+        try {
+            $conversation = $this->createOrGetConversation($recipient);
+            $message = Message::query()->create([
+                'conversation_id' => $conversation->id,
+                'user_id' => $this->id,
+                'message' => $body,
+            ]);
+            $conversation->markAsUnread();
+            $recipient->notify(
+                instance: new DirectMessageNotification(
+                    title: 'New Message From ' . $this->name,
+                    message: Str::limit($message->message, 50),
+                /* data: [
+                     'message' => json_encode(new MessageListResource($message))
+                 ],*/
+                ));
+            return ['status' => true, 'message' => $message];
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage(), $exception->getTrace());
+            return ['status' => false, 'message' => $exception->getMessage()];
+        }
+    }
+
+    public function createOrGetConversation(Model $recipient): Conversation
+    {
+        /** @var Conversation $conversation */
+        $conversation = $this->findConversationWith($recipient->id);
+        if (isset($conversation)) {
+            return $conversation;
+        }
+        return $this->conversations()->create([
+            'user_one' => $this->id,
+            'user_two' => $recipient->id,
+        ]);
+    }
+
+    public function findConversationWith(int $userId): ?Conversation
+    {
+        $conversation = Conversation::query()
+            ->with('messages.user')
+            ->where('user_two', $userId)
+            ->where('user_one', request()->user()->id);
+        if (!$conversation->exists()) {
+            $conversation->orWhere(function ($query) use ($userId) {
+                $query->where('user_two', request()->user()->id)
+                    ->where('user_one', $userId);
+            });
+        }
+        return $conversation->first();
+    }
+}

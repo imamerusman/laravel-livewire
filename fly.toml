@@ -1,0 +1,48 @@
+# fly.toml app configuration file generated for appify-gate on 2023-09-12T18:04:24+05:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "appify-gate"
+primary_region = "sin"
+console_command = "php /var/www/html/artisan tinker"
+
+[build]
+  [build.args]
+    NODE_VERSION = "18"
+    PHP_VERSION = "8.2"
+
+[env]
+  APP_ENV = "production"
+  APP_URL = "https://appifystore.com"
+  CACHE_DRIVER = "redis"
+  DB_CONNECTION = "mysql"
+  DB_DATABASE = "appify"
+  DB_USERNAME = "appify"
+  DB_HOST = "appify-mysql.internal"
+  LOG_CHANNEL = "stderr"
+  LOG_LEVEL = "info"
+  LOG_STDERR_FORMATTER = "Monolog\\Formatter\\JsonFormatter"
+  OCTANE_SERVER = "swoole"
+  QUEUE_CONNECTION = "redis"
+  REDIS_CACHE_DB = "0"
+  REDIS_URL = "redis://default:71be57b30c294a24b1ad8dc0514d7148@fly-small-dew-4763.upstash.io"
+  SESSION_DRIVER = "cookie"
+  SESSION_SECURE_COOKIE = "true"
+
+[processes]
+  app = ""
+  cron = "cron -f"
+  worker = "php artisan queue:listen --timeout=0 --memory=128 --tries=1"
+
+[[mounts]]
+  source = "storage_vol"
+  destination = "/var/www/html/storage"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]

@@ -1,0 +1,25 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "proxy:pgsql": "fly proxy 5432 -a black-violet-6870",
+        "proxy:mysql": "fly proxy 3306 -a appify-mysql"
+    },
+    "devDependencies": {
+        "@tailwindcss/forms": "^0.5.7",
+        "@tailwindcss/typography": "^0.5.10",
+        "autoprefixer": "^10.4.16",
+        "axios": "^1.1.2",
+        "chokidar": "^3.5.3",
+        "daisyui": "^3.9.4",
+        "laravel-vite-plugin": "^0.7.5",
+        "postcss": "^8.4.31",
+        "tailwindcss": "^3.3.5",
+        "vite": "^4.0.0"
+    },
+    "dependencies": {
+        "swiper": "^11.0.3"
+    }
+}
